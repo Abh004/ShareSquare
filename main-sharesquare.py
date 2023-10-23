@@ -1,35 +1,39 @@
-import pygame
-
-# pygame setup
-pygame.init()
-info = pygame.display.Info()
-info = pygame.display.Info()
-w = info.current_w
-h = (info.current_h)-60 
-screen = pygame.display.set_mode((w,h), pygame.RESIZABLE|pygame.SCALED)
-clock = pygame.time.Clock()
-running = True
-dt = 0
-
-# pygame title
-pygame.display.set_caption("ShareSquare - Friendly way to split bills")
-
-while running:
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # fill the screen with a color to wipe away anything from last frame
-        screen.fill("#e78492")
-        pygame.draw.rect(screen, "#f01616", pygame.Rect(w-70,h-(h-15),60, 30), border_radius=20)
-       
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
+ 
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(400, 300)
+ 
+        self.pushButton = QtWidgets.QPushButton(Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(150, 70, 93, 28))
+ 
+        self.label = QtWidgets.QLabel(Dialog)
+        self.label.setGeometry(QtCore.QRect(130, 149, 151, 31))
+        self.label.setText("")
+ 
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
         
-
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-
-    # limits FPS to 60
-    dt = clock.tick(60) / 1000
-
-pygame.quit()
+        # adding signal and slot
+        self.pushButton.clicked.connect(self.showmsg) 
+ 
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.pushButton.setText(_translate("Dialog", "Click"))
+         
+    def showmsg(self):
+        # slot
+        self.label.setText("You clicked me")
+ 
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+ 
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_Dialog()
+ 
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
