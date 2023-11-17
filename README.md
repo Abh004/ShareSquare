@@ -1,12 +1,9 @@
-ShareSquare
+# ShareSquare
 -----------------------
-Modules to be used:
------------------------
---> tkinter 
---> panda/numpy
---> matplotlib
---> pdfkit
---> sqlite3/MySQL
---> csv 
---> PostgreSQL
---> 
+# Modules to be used:
+> + tkinter 
+> + panda/numpy
+> + matplotlib
+> + pdfkit
+> + csv 
+> + PostgreSQL
