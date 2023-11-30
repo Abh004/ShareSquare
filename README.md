@@ -16,6 +16,7 @@
 > + password
 ### 2. groups
 > + id(fk)
+> + groupname
 > + name
 ### 3. split
 > + id(fk)
