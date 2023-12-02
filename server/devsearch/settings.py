@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'pages',
     'loginpage',
-    'userprofile',
+
 ]
 
 MIDDLEWARE = [
