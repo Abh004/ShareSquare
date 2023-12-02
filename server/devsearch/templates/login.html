@@ -1,0 +1,29 @@
+<!-- yourapp/templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareSquare</title>
+</head>
+<body>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <h2>Welcome To ShareSquare</h2>
+ 
+        <p>
+            <label>Username : <input type="text" /></label>
+        </p>
+ 
+        <p>
+            <label>Password : <input type="password"/></label>
+        </p>
+ 
+        <p>
+            <button type="submit">Enter</button>
+        </p>
+ 
+    </form>
+</body>
+</html>
