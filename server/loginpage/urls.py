@@ -7,4 +7,5 @@ urlpatterns = [
     #path('login/', login_view, name='login'),
     path('signup/', register, name='signup'),
     path('login/', login, name='login'),
+    #path('landing/',landing, name='landing')
 ]

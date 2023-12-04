@@ -1,4 +1,5 @@
-<!-- yourapp/templates/login.html -->
+<!-- yourapp/templates/login.html-->
+<!--"{% url 'login' %}" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +8,27 @@
     <title>ShareSquare - Login</title>
 </head>
 <body>
-    <form method="post" action="{% url 'login' %}">
+    </div>
+        <style>
+            h5{
+            color:red;
+             }
+        </style>
+            {% for message in messages %}
+            <h5>{{message}}</h5>
+            {% endfor %}
+    </div>
+    <form method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}
         <h2>Welcome To ShareSquare</h2>
  
         <p>
-            <label>Username : <input type="text" /></label>
+            <label>Username : <input type = "text" name = "username" required/></label>
         </p>
  
         <p>
-            <label>Password : <input type="password"/></label>
+            <label>Password : <input type = "password" name = "password" required/></label>
         </p>
  
         <p>

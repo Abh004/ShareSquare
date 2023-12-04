@@ -32,4 +32,17 @@ def register(request):
     
 
 def login(request):    
-    return render(request, 'login.html')
+    if request.method =='POST':
+         username1 = request.POST['username']
+         password1 = request.POST['password']
+
+         if user_profile1.objects.filter(username=username1 , password=password1).exists():
+              print("Authenticated!")
+              return render(request, 'landing_page.html')
+         else:
+              messages.info(request, 'Credentials do not exist. Please Create Account!')
+              return redirect("/login")         
+        
+    else:
+        return render(request, 'login.html')
+    
