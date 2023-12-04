@@ -37,8 +37,9 @@ def login(request):
          password1 = request.POST['password']
 
          if user_profile1.objects.filter(username=username1 , password=password1).exists():
+              x = user_profile1.objects.all()
               print("Authenticated!")
-              return render(request, 'landing_page.html')
+              return render(request, 'landing_page.html', {"name":x})
          else:
               messages.info(request, 'Credentials do not exist. Please Create Account!')
               return redirect("/login")         
