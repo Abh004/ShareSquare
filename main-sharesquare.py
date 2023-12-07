@@ -1,20 +1,19 @@
-import tkinter as tk
-import tkinter.font as tkFont
 import psycopg2
+import tkinter
+from tkinter import messagebox
+from tkinter.ttk import *
+from PIL import ImageTk, Image
 
-def login():
+def loginpage():
     conn = psycopg2.connect(
         host="localhost",
-        database="sharesquare",
+        database="sharesquare1",
         user="postgres",
         password="welcome1234")
     cur = conn.cursor()
 
-    login_username = input("Please enter your username or email: ")
-    login_password = input("Please enter your password: ")
-
-    check_login = (f"SELECT name FROM public.login WHERE name = '{login_username}'")
-    check_password = (f"SELECT password FROM public.login WHERE name = '{login_username}'")
+    check_login = (f"SELECT username FROM public.loginpage WHERE username = '{email_Entry.get()}'")
+    check_password = (f"SELECT password FROM public.loginpage WHERE username = '{email_Entry.get()}'")
 
     cur.execute(check_login)
     username_result = cur.fetchone()[0]
@@ -24,10 +23,62 @@ def login():
     passwordr = password_result
     usernamer = username_result
 
-    if login_password == passwordr and login_username == usernamer:
-        print("Logged in successfully")
-    else: 
-        print("Login failed, wrong username or password")
+    if email_Entry.get()==username_result and pwd_Entry.get()==password_result:
+        mainwindow()        
+    else:
+        messagebox.showinfo(title="Login",message="Incorrect Email or password")
+
+#colors
+bg1='#1b1b1b'
+c1='#212121'
+c2='#71758F'
+
+root = tkinter.Tk()
+frame=tkinter.Frame(bg=bg1)
+
+#login window
+root.title("Login")
+root.geometry('450x450')
+root['background']=bg1
+
+#main window
+def mainwindow():
+    window = tkinter.Toplevel(root)
+    window.title("ShareSquare")
+    window['background']=bg1
+    window.geometry('1200x700')
+    cv=tkinter.Canvas(window,width=1200,height=700,bg=bg1,highlightthickness=0)
+    cv.pack()
+
+    #header
+    cv.create_rectangle(0,0,1200,80,fill=c1)
+    img = ImageTk.PhotoImage(Image.open("D:\\Compproj\\Image.png"))
+    cv.create_image(15, 22.5,anchor=tkinter.NW, image=img)
+
+    
+    window.mainloop()
+
+#login function
+def login():
+    loginpage()
+
+#login widget
+login_label=tkinter.Label(frame,text="Login",bg=bg1,fg="White",font=("Arial",16))
+email_label=tkinter.Label(frame,text="Username",bg=bg1,fg="White")
+email_Entry=tkinter.Entry(frame)
+pwd_label=tkinter.Label(frame,text="Password",bg=bg1,fg="White")
+pwd_Entry=tkinter.Entry(frame,show="*")
+login_button=tkinter.Button(frame,text="Login",bg=c2,fg="White",command=login)
+
+login_label.grid(row=0,column=0,columnspan=2,pady=40)
+email_label.grid(row=1,column=0)
+email_Entry.grid(row=1,column=1)
+pwd_label.grid(row=2,column=0)
+pwd_Entry.grid(row=2,column=1)
+login_button.grid(row=3,column=0,columnspan=2,pady=20)
+
+frame.pack()
+root.mainloop()
 
 """
 class App:
