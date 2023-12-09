@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 
+#DB Conn for login page
 def loginpage():
     conn = psycopg2.connect(
         host="localhost",
@@ -28,6 +29,44 @@ def loginpage():
     else:
         messagebox.showinfo(title="Login",message="Incorrect Email or password")
 
+#DB Conn for register pages
+def regpage():
+    conn = psycopg2.connect(
+        host="localhost",
+        database="sharesquare1",
+        user="postgres",
+        password="welcome1234")
+    cur = conn.cursor()
+
+    insert_name = (f"INSERT into public.loginpage (name,username,email,password) VALUES ('{cusn_Entry.get()}','{cemail_Entry.get()}','{cpw_Entry.get()}','{cpwd_Entry.get()}');")
+    username_check = (f"SELECT username from public.loginpage where username = '{cemail_Entry.get()}';")
+
+    cur.execute(username_check)
+    username_result = cur.fetchone()
+
+    if len(cusn_Entry.get())!=0 and len(cemail_Entry.get())!=0 and len(cpw_Entry.get())!=0 and len(cpwd_Entry.get())!=0:
+        if username_result==None:
+            cur.execute(insert_name)
+            conn.commit()
+            messagebox.showinfo(title="SignUp",message="User account has been created! Please proceed to login page!")
+            swin.destroy()
+
+        else:
+            messagebox.showinfo(title='Username Invalid',message="Username already exists! Please pick a unique one!")
+            swin.focus()
+
+    else:
+        messagebox.showinfo(title="Invalid Input",message="Please fill in all the fields!")   
+        swin.focus()         
+
+#Calling signup DB Command
+def register():
+    regpage()
+
+#Calling login DB Command
+def login():
+    loginpage()
+
 #colors
 bg1='#1b1b1b'
 c1='#212121'
@@ -35,32 +74,75 @@ c2='#71758F'
 
 root = tkinter.Tk()
 frame=tkinter.Frame(bg=bg1)
+width = 450
+height = 450
+#root.eval('tk::PlaceWindow . topcenter')
+screen_width = root.winfo_screenwidth()  
+screen_height = root.winfo_screenheight() 
+x = (screen_width/2) - (width/2)
+y = (screen_height/2) - (height/2)
 
 #login window
 root.title("Login")
-root.geometry('450x450')
+root.geometry('%dx%d+%d+%d' % (width, height, x, y))
 root['background']=bg1
+root.resizable(0,0)
 
 #main window
 def mainwindow():
     window = tkinter.Toplevel(root)
     window.title("ShareSquare")
     window['background']=bg1
-    window.geometry('1200x700')
+    window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    window.resizable(0,0)
     cv=tkinter.Canvas(window,width=1200,height=700,bg=bg1,highlightthickness=0)
     cv.pack()
 
     #header
     cv.create_rectangle(0,0,1200,80,fill=c1)
-    img = ImageTk.PhotoImage(Image.open("D:\\Compproj\\Image.png"))
+    img = ImageTk.PhotoImage(Image.open(r"resources\Image.png"))
     cv.create_image(15, 22.5,anchor=tkinter.NW, image=img)
-
-    
+    cv.create_text(130,40,text="Sharesquare",fill="White",font="Arial 16 bold")    
     window.mainloop()
 
-#login function
-def login():
-    loginpage()
+#signup window
+def signup():
+    global cusn_Entry, cemail_Entry, cpw_Entry, cpwd_Entry, swin
+
+    swin=tkinter.Toplevel()
+    swin.title("Sign Up")
+    swin['background']=bg1
+    swin.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    swin.resizable(0,0)
+
+    frame2=tkinter.Frame(swin,bg=bg1)
+    frame2.pack()
+
+    login_label2=tkinter.Label(frame2,text="Sign Up",bg=bg1,fg="White",font=("Arial",16))
+    login_label2.grid(row=0,column=0,columnspan=2,pady=40)
+
+    cusn_label=tkinter.Label(frame2,text="Name",bg=bg1,fg="White")
+    cusn_Entry=tkinter.Entry(frame2)
+    cusn_label.grid(row=1,column=0)
+    cusn_Entry.grid(row=1,column=1)
+
+    cemail_label=tkinter.Label(frame2,text="Username",bg=bg1,fg="White")
+    cemail_Entry=tkinter.Entry(frame2)
+    cemail_label.grid(row=2,column=0)
+    cemail_Entry.grid(row=2,column=1)
+
+    cpw_label=tkinter.Label(frame2,text="E-mail",bg=bg1,fg="White")
+    cpw_Entry=tkinter.Entry(frame2)
+    cpw_label.grid(row=3,column=0)
+    cpw_Entry.grid(row=3,column=1)
+
+    cpwd_label=tkinter.Label(frame2,text="Password",bg=bg1,fg="White")
+    cpwd_Entry=tkinter.Entry(frame2,show="*")
+    cpwd_label.grid(row=4,column=0)
+    cpwd_Entry.grid(row=4,column=1)
+
+    cacc=tkinter.Button(frame2,text="Sign Up",bg=c2,fg="White", command=register)
+    cacc.grid(row=5,column=0,columnspan=2,pady=20)
 
 #login widget
 login_label=tkinter.Label(frame,text="Login",bg=bg1,fg="White",font=("Arial",16))
@@ -69,6 +151,7 @@ email_Entry=tkinter.Entry(frame)
 pwd_label=tkinter.Label(frame,text="Password",bg=bg1,fg="White")
 pwd_Entry=tkinter.Entry(frame,show="*")
 login_button=tkinter.Button(frame,text="Login",bg=c2,fg="White",command=login)
+signup_button=tkinter.Button(frame,text="Sign Up",bg=c2,fg="White",command=signup)
 
 login_label.grid(row=0,column=0,columnspan=2,pady=40)
 email_label.grid(row=1,column=0)
@@ -76,62 +159,8 @@ email_Entry.grid(row=1,column=1)
 pwd_label.grid(row=2,column=0)
 pwd_Entry.grid(row=2,column=1)
 login_button.grid(row=3,column=0,columnspan=2,pady=20)
+signup_button.grid(row=4,column=0,columnspan=2, padx=7)
 
 frame.pack()
 root.mainloop()
-
-"""
-class App:
-    def __init__(self, root):
-        #setting title
-        root.title("Login")
-        #setting window size
-        width=600
-        height=500
-        screenwidth = root.winfo_screenwidth()
-        screenheight = root.winfo_screenheight()
-        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
-        root.geometry(alignstr)
-        root.resizable(width=False, height=False)
-
-        GMessage_439=tk.Message(root)
-        ft = tkFont.Font(family='Times',size=23)
-        GMessage_439["font"] = ft
-        GMessage_439["fg"] = "#333333"
-        GMessage_439["justify"] = "center"
-        GMessage_439["text"] = "Sign In"
-        GMessage_439.place(x=250,y=70,width=80,height=25)
-
-        GLineEdit_622=tk.Entry(root)
-        GLineEdit_622["borderwidth"] = "1px"
-        ft = tkFont.Font(family='Times',size=10)
-        GLineEdit_622["font"] = ft
-        GLineEdit_622["fg"] = "#333333"
-        GLineEdit_622["justify"] = "center"
-        GLineEdit_622["text"] = ""
-        GLineEdit_622.place(x=170,y=210,width=251,height=53)
-        GLineEdit_622["show"] = "Username"
-        GLineEdit_622["invalidcommand"] = "Username"
-
-        GLineEdit_782=tk.Entry(root)
-        GLineEdit_782["borderwidth"] = "1px"
-        ft = tkFont.Font(family='Times',size=10)
-        GLineEdit_782["font"] = ft
-        GLineEdit_782["fg"] = "#333333"
-        GLineEdit_782["justify"] = "center"
-        GLineEdit_782["text"] = "Entry"
-        GLineEdit_782.place(x=170,y=310,width=251,height=67)
-        GLineEdit_782["show"] = "Password"
-        GLineEdit_782["invalidcommand"] = "Password"
-
-    def Username(self):
-        print("command")
-
-    def Password(self):
-        print("command")
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = App(root)
-    root.mainloop()
-"""
 
