@@ -125,7 +125,6 @@ login_button.grid(row=3,column=0,columnspan=2,pady=20)
 #next
 def next():
     #DB conn for profile page
-    global profile_details
     conn = psycopg2.connect(
         host="localhost",
         database="sharesquare1",
@@ -139,7 +138,7 @@ def next():
     options=[]
     for i in range(len(result2)):
         options.append(result2[i][0])
-    print(options)  
+    print(options)         
 
     def input():
         conn = psycopg2.connect(
@@ -156,7 +155,39 @@ def next():
         d=""
         for i in range(len(x)):
             d+=str(i+1)+") "+x[i]
-            d+="\n"+"\n"           
+            d+="\n"+"\n" 
+
+        def enter():
+            conn = psycopg2.connect(
+            host="localhost",
+            database="sharesquare1",
+            user="postgres",
+            password="welcome1234")
+            cur = conn.cursor()
+
+            check_members= (f"select members from public.groups1 where groupname = ('{menu.get()}'); ")
+            cur.execute(check_members)
+            result3=cur.fetchall()
+            x=result3[0][0].split(",")
+
+            amount=Entry_members1.get()
+            split=float(amount)/len(x)
+            f=""   
+            for j in range(len(x)):
+                f+=str(j+1)+")"+x[j]+" - "+"₹"+str(split)
+                f+="\n"+"\n" 
+
+            if menu1.get()=="Equal Split":
+                frame6.destroy()
+                frame7=tkinter.Frame(window4,bg=bg1)
+                frame7.pack()       
+                label_profile7=tkinter.Text(frame7,bg=bg1,fg="White",height=5, width=30, font="Arial 16")
+                v=Scrollbar(frame7, orient='vertical')
+                v.grid(column=7, pady=(0,0),padx=(10,0))
+                v.config(command=label_profile7.yview)    
+                label_profile7.insert(tkinter.END, f)
+                label_profile7.configure(state='disabled', yscrollcommand=v.set)
+                label_profile7.grid(row=1,column=1,columnspan=6,pady=(10,0),padx=(40,90))
         
         frame5.destroy()
         frame6=tkinter.Frame(window4,bg=bg1)
@@ -171,9 +202,17 @@ def next():
         label_profile6.configure(state='disabled', yscrollcommand=v.set)
         label_profile6.grid(row=1,column=1,columnspan=6,pady=(10,0),padx=(40,90))
         label7=tkinter.Label(frame6,text="Bill Amount",bg=bg1,fg="White",font=("Arial 16 bold",16))
-        label7.grid(row=3, column=0, columnspan=2, padx=(170,160), pady=(100,0))
-        Entry_members=tkinter.Entry(frame6)
-        Entry_members.grid(row=3,column=0,columnspan=2, padx=(170,160), pady=(180,0))
+        label7.grid(row=3, column=0, columnspan=2, padx=(170,160), pady=(40,0))
+        Entry_members1=tkinter.Entry(frame6)
+        Entry_members1.grid(row=3,column=0,columnspan=2, padx=(170,160), pady=(90,0))
+        label8=tkinter.Label(frame6,text="₹",bg=bg1,fg="White",font=("Arial 16 bold",16))
+        label8.grid(row=3, column=0, columnspan=2, padx=(20,160), pady=(90,0))
+        amount_button = tkinter.Button(frame6,text = "Enter",bg=c2,fg="White", command=enter)
+        amount_button.grid(row=3,column=0,columnspan=2,padx=(170,160), pady=(160,0)) 
+
+        menu1= tkinter.StringVar()
+        drop1= OptionMenu(frame6, menu1, "Equal Split","Unequal Split (by %)")
+        drop1.grid(row=2,column=0,columnspan=2, padx=(170,160), pady=(10,0))   
         conn.close()
         
     window4 = tkinter.Toplevel(root)
@@ -185,7 +224,8 @@ def next():
     frame5=tkinter.Frame(window4,bg=bg1)
     frame5.pack()
 
-    menu= tkinter.StringVar()    
+    menu= tkinter.StringVar()  
+    #menu.set( "Equal Split" )  
     #Create a dropdown Menu
     drop= OptionMenu(frame5, menu, *options)
     drop.grid(row=0,column=0,columnspan=2, padx=(0,0), pady=(80,0))    
