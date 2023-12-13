@@ -274,7 +274,6 @@ def your_debts():
 #user profile page 
 def profile():
     #DB conn for profile page
-    global profile_details
     conn = psycopg2.connect(
         host="localhost",
         database="sharesquare1",
@@ -319,7 +318,7 @@ def profile():
     label_profile5=tkinter.Label(window3,text="Groups:",bg=bg1,fg="White", font="Arial 16 bold")
     label_profile5.grid(row=8,column=0,columnspan=2,padx=(15,0))
         
-    label_profile6=tkinter.Text(window3,bg=bg1,fg="White",height=5, width=30, font="Arial 16 bold")
+    label_profile6=tkinter.Text(window3,bg=bg1,fg="White",height=8, width=30, font="Arial 16 bold")
     v=Scrollbar(window3, orient='vertical')
     v.grid(sticky='e',column=7, pady=(10,0))
     v.config(command=label_profile6.yview)    
