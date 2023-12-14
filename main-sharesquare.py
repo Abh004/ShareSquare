@@ -1,4 +1,5 @@
 import psycopg2
+import customtkinter
 import tkinter
 from tkinter import messagebox
 from tkinter.ttk import *
@@ -157,7 +158,52 @@ def next():
             d+=str(i+1)+") "+x[i]
             d+="\n"+"\n" 
 
+        def unequal_split():
+            conn = psycopg2.connect(
+            host="localhost",
+            database="sharesquare1",
+            user="postgres",
+            password="welcome1234")
+            cur = conn.cursor()            
+            c=0
+            g=""   
+            g_=""         
+            for i in range (0,len(x)):
+                y=perc_Entry[i].get()
+                c+=int(y)
+                if c<=100:
+                    share=(int(y)/100)*float(amount)
+                    g+=str(i+1)+")"+x[i]+" - "+"₹"+str(share)
+                    g+="\n"+"\n"
+                    g_+="-->"+x[i]+" - "+"₹"+str(share)
+                    g_+="\n"+"\n"
+                    print(g)
+                else:
+                    messagebox.showinfo(title="Error",message="Percentage exceeds 100")
+            check_members1= (f"insert into public.bills1 (bill_leader,amount,debt,group_name) values ('{active_user}','{amount}','{g_}','{menu.get()}'); ")
+            cur.execute(check_members1)
+            conn.commit()
+            conn.close()            
+            frame9=tkinter.Frame(window4,bg=bg1)
+            frame9.pack()
+            label_profile8=tkinter.Text(frame9,bg=bg1,fg="White",height=8, width=30, font="Arial 16")
+            v1=Scrollbar(frame9, orient='vertical')
+            v1.grid(column=7, pady=(0,0),padx=(0,0))
+            v1.config(command=label_profile8.yview)    
+            label_profile8.insert(tkinter.END, g)
+            label_profile8.configure(state='disabled', yscrollcommand=v1.set)
+            label_profile8.grid(row=0,column=1,columnspan=6,pady=(10,0),padx=(30,90))
+            print(c)
+
         def enter():
+            conn = psycopg2.connect(
+            host="localhost",
+            database="sharesquare1",
+            user="postgres",
+            password="welcome1234")
+            cur = conn.cursor()
+
+            global perc_Entry,amount
             conn = psycopg2.connect(
             host="localhost",
             database="sharesquare1",
@@ -173,9 +219,12 @@ def next():
             amount=Entry_members1.get()
             split=float(amount)/len(x)
             f=""   
+            f_=""
             for j in range(len(x)):
                 f+=str(j+1)+")"+x[j]+" - "+"₹"+str(split)
                 f+="\n"+"\n" 
+                f_+="-->"+x[j]+" - "+"₹"+str(split)
+                f_+="\n"+"\n" 
 
             if menu1.get()=="Equal Split":
                 frame6.destroy()
@@ -188,6 +237,24 @@ def next():
                 label_profile7.insert(tkinter.END, f)
                 label_profile7.configure(state='disabled', yscrollcommand=v.set)
                 label_profile7.grid(row=1,column=1,columnspan=6,pady=(10,0),padx=(40,90))
+                check_members2= (f"insert into public.bills1 (bill_leader,amount,debt,group_name) values ('{active_user}','{amount}','{f_}','{menu.get()}'); ")
+                cur.execute(check_members2)
+                conn.commit()
+                conn.close()
+            elif menu1.get()=="Unequal Split (by %)":
+                frame6.destroy()
+                frame8=customtkinter.CTkScrollableFrame(window4,bg_color=bg1,orientation="vertical")
+                frame8.pack()
+                perc_Entry=[]
+                for i in range(0,len(x)):
+                    perc_Entry.append(i)                    
+                    print(x[i])
+                    label9=customtkinter.CTkLabel(frame8,text=x[i],fg_color=c1,font=("Arial 16 ",16))
+                    label9.grid(row=i+1,column=1,columnspan=2,pady=(10,0),padx=(0,0))
+                    perc_Entry[i]=customtkinter.CTkEntry(frame8,placeholder_text="Enter % of split")
+                    perc_Entry[i].grid(row=i+1,column=3,padx=30)                    
+                perc_calc=customtkinter.CTkButton(frame8,text="Submit",fg_color=c2,text_color="White", command=unequal_split)
+                perc_calc.grid(row=len(x)+1,column=2,columnspan=2,pady=20,padx=20)
         
         frame5.destroy()
         frame6=tkinter.Frame(window4,bg=bg1)
@@ -211,7 +278,7 @@ def next():
         amount_button.grid(row=3,column=0,columnspan=2,padx=(170,160), pady=(160,0)) 
 
         menu1= tkinter.StringVar()
-        drop1= OptionMenu(frame6, menu1, "Equal Split","Unequal Split (by %)")
+        drop1= OptionMenu(frame6, menu1, "Equal Split","Equal Split","Unequal Split (by %)")
         drop1.grid(row=2,column=0,columnspan=2, padx=(170,160), pady=(10,0))   
         conn.close()
         
@@ -265,11 +332,39 @@ def splitbill():
 
 #your debts page
 def your_debts():
+    conn = psycopg2.connect(
+        host="localhost",
+        database="sharesquare1",
+        user="postgres",
+        password="welcome1234")
+    cur = conn.cursor()
+
     window2 = tkinter.Toplevel(root)
     window2.title("ShareSquare - Debts")
     window2['background']=bg1
     window2.geometry('%dx%d+%d+%d' % (width, height, x, y))
     window2.resizable(0,0)
+
+    check_members= (f"select group_name, amount, debt from public.bills1 where bill_leader = ('{active_user}'); ")
+    cur.execute(check_members)
+    result3=cur.fetchall()
+    print(result3)
+    k=""
+    for j in range(len(result3)):
+        k+=str(j+1)+")"+result3[j][0]+" - "+"₹"+result3[j][1]
+        k+="\n"+"\n" 
+        k+=result3[j][2]
+        k+="\n"+"\n" 
+
+    frame9=tkinter.Frame(window2,bg=bg1)
+    frame9.pack()
+    label_profile8=tkinter.Text(frame9,bg=bg1,fg="White",height=8, width=30, font="Arial 16")
+    v1=Scrollbar(frame9, orient='vertical')
+    v1.grid(column=7, pady=(0,0),padx=(0,0))
+    v1.config(command=label_profile8.yview)    
+    label_profile8.insert(tkinter.END, k)
+    label_profile8.configure(state='disabled', yscrollcommand=v1.set)
+    label_profile8.grid(row=0,column=1,columnspan=6,pady=(10,0),padx=(30,90))
 
 #user profile page 
 def profile():
@@ -349,7 +444,7 @@ def mainwindow():
     frame3.pack()
     split_bill=tkinter.Button(frame3,text="Split your Bill",bg=c2,fg="White",command=splitbill)
     split_bill.grid(row=0,column=0, pady=70)#, padx=(240,0))
-    debt_check=tkinter.Button(frame3,text="Your Debts",bg=c2,fg="White",command=your_debts)
+    debt_check=tkinter.Button(frame3,text="Split History",bg=c2,fg="White",command=your_debts)
     debt_check.grid(row=1,column=0)#, padx=(240,0))
     user_profile=tkinter.Button(frame3,text="Your Profile",bg=c2,fg="White",command=profile)
     user_profile.grid(row=2,column=0,pady=70)#, padx=(240,0))
