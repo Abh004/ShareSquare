@@ -1,10 +1,13 @@
 import psycopg2
 import customtkinter
 import tkinter
+import csv
+import matplotlib.pyplot as plot
 from tkinter import messagebox
 from tkinter.ttk import *
 from tkinter.scrolledtext import ScrolledText
 from PIL import ImageTk, Image
+
 
 #DB Conn for login page
 def loginpage():
@@ -331,7 +334,8 @@ def splitbill():
     next_button.grid(row=5,column=0,columnspan=2,pady=20)
 
 #your debts page
-def your_debts():
+def your_debts():    
+ 
     conn = psycopg2.connect(
         host="localhost",
         database="sharesquare1",
@@ -346,16 +350,39 @@ def your_debts():
     window2.resizable(0,0)
 
     check_members= (f"select group_name, amount, debt from public.bills1 where bill_leader = ('{active_user}'); ")
+    groups=(f"select group_name from public.bills1 where bill_leader = ('{active_user}'); ")
+    debt=(f"select amount from public.bills1 where bill_leader = ('{active_user}'); ")
     cur.execute(check_members)
     result3=cur.fetchall()
+    cur.execute(groups)
+    result4=cur.fetchall()
+    cur.execute(debt)
+    result5=cur.fetchall()
     print(result3)
+    print(result4)
+    print(result5)    
+    l1=[]
+    l2=[] 
+    for b in range(len(result4)):
+        l1.append(result4[b][0])
+    for k in range(len(result5)):
+        l2.append(result5[k][0])
+    print(l1)
+    print(l2)
     k=""
     for j in range(len(result3)):
         k+=str(j+1)+")"+result3[j][0]+" - "+"₹"+result3[j][1]
         k+="\n"+"\n" 
         k+=result3[j][2]
         k+="\n"+"\n" 
-
+    def plot_pie_chart():     
+        plot.figure(figsize=(2, 2))
+        plot.pie(expenditures, labels=groups, autopct='%1.1f%%', startangle=140, colors=plot.cm.Paired.colors)
+        plot.title('Total Expenditure by Group')
+        plot.axis('equal')        
+        plot.show()
+    groups = l1
+    expenditures = l2
     frame9=tkinter.Frame(window2,bg=bg1)
     frame9.pack()
     label_profile8=tkinter.Text(frame9,bg=bg1,fg="White",height=8, width=30, font="Arial 16")
@@ -365,7 +392,10 @@ def your_debts():
     label_profile8.insert(tkinter.END, k)
     label_profile8.configure(state='disabled', yscrollcommand=v1.set)
     label_profile8.grid(row=0,column=1,columnspan=6,pady=(10,0),padx=(30,90))
-
+    submit_button=tkinter.Button(frame9,text="Expense by Group",bg=c2,fg="White",command=plot_pie_chart)
+    submit_button.grid(row=3,column=1,columnspan=2,pady=20)
+    
+    
 #user profile page 
 def profile():
     #DB conn for profile page
