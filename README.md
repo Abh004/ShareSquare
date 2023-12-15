@@ -4,6 +4,10 @@
 # All the modules used:
 >+ tkinter
 >> GUI
+>+ customtkinter
+>> Modern widgets for GUI
+>+ pillow
+>+ Add image manipulation capabilities 
 >+ itertools
 >> To create complex looping constructs
 >+ matplotlib 
