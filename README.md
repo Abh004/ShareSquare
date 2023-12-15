@@ -1,6 +1,10 @@
 # ShareSquare
-##### Create database before running the code 
 -----------------------
+# Dependencies
+>+ Python 3.12.0 
+>+ PostgreSQL & pgAdmin4 to manage the database
+>+ pip install all the modules mentioned below
+
 # All the modules used:
 >+ tkinter
 >> GUI
