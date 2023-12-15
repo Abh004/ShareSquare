@@ -1,25 +1,61 @@
 # ShareSquare
+##### Create database before running the code 
 -----------------------
-# Modules used:
-> + tkinter 
-> + panda/numpy
-> + matplotlib
-> + pdfkit
-> + csv 
-> + PostgreSQL
+# All the modules used:
+>+ tkinter
+>> GUI
+>+ matplotlib 
+>> Plot pie charts
+>+ reportlab
+>> Export data to PDF
+>+ csv 
+>> Export data to CSV File
+>+ PostgreSQL
+>> Database for the Application
 
-# Schema of DB:
-### 1. login 
-> + id(pk)
-> + name
-> + email-id
-> + password
-### 2. groups
-> + id(fk)
-> + groupname
-> + name
-### 3. split
-> + id(fk)
-> + name
-> + debt(pk)
-> + payment status
+# SQL commands to create the Database:
+### 1. loginpage
+```
+CREATE TABLE public.loginpage
+ (
+    id bigserial NOT NULL,
+    username character varying NOT NULL,
+    name character varying NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    PRIMARY KEY (id)
+ );
+
+ ALTER TABLE IF EXISTS public.loginpage1
+    OWNER to postgres;
+```
+### 2. groups1
+```
+CREATE TABLE public.groups1
+(
+    id bigserial NOT NULL,
+    groupname character varying NOT NULL,
+    leader character varying NOT NULL,
+    members character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS public.groups1
+    OWNER to postgres;
+```
+
+### 3. bills1
+```
+CREATE TABLE public.bills1
+(
+    id bigserial NOT NULL,
+    bill_leader character varying NOT NULL,
+    amount character varying NOT NULL,
+    debt character varying NOT NULL,
+    group_name character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS public.bills1
+    OWNER to postgres;
+```
