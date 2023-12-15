@@ -7,7 +7,10 @@ from tkinter import messagebox
 from tkinter.ttk import *
 from tkinter.scrolledtext import ScrolledText
 from PIL import ImageTk, Image
-
+from itertools import islice 
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import mm
+from reportlab.lib.pagesizes import A4
 
 #DB Conn for login page
 def loginpage():
@@ -306,7 +309,6 @@ def next():
     conn.close()
     window1.destroy()   
 
-
 def splitbill():
     global Entry_groupname, Entry_members, window1
 
@@ -334,8 +336,7 @@ def splitbill():
     next_button.grid(row=5,column=0,columnspan=2,pady=20)
 
 #your debts page
-def your_debts():    
- 
+def your_debts():     
     conn = psycopg2.connect(
         host="localhost",
         database="sharesquare1",
@@ -352,23 +353,31 @@ def your_debts():
     check_members= (f"select group_name, amount, debt from public.bills1 where bill_leader = ('{active_user}'); ")
     groups=(f"select group_name from public.bills1 where bill_leader = ('{active_user}'); ")
     debt=(f"select amount from public.bills1 where bill_leader = ('{active_user}'); ")
+    export=(f"select group_name,amount from public.bills1 where bill_leader=('{active_user}');")
     cur.execute(check_members)
     result3=cur.fetchall()
     cur.execute(groups)
     result4=cur.fetchall()
     cur.execute(debt)
     result5=cur.fetchall()
-    print(result3)
-    print(result4)
-    print(result5)    
+    cur.execute(export)
+    result6=cur.fetchall()
     l1=[]
-    l2=[] 
+    l2=[]     
+    l3=[]  
+    l6=[]
     for b in range(len(result4)):
         l1.append(result4[b][0])
     for k in range(len(result5)):
-        l2.append(result5[k][0])
-    print(l1)
-    print(l2)
+        l2.append(result5[k][0])       
+    for t in range(len(result6)):
+        l6.append(2)
+        for g in range(len(result6[t])):
+            l3.append(result6[t][g])
+    input=iter(l3)    
+    l4=[list(islice(input,num))
+        for num in l6]
+    print(l4)
     k=""
     for j in range(len(result3)):
         k+=str(j+1)+")"+result3[j][0]+" - "+"₹"+result3[j][1]
@@ -381,6 +390,41 @@ def your_debts():
         plot.title('Total Expenditure by Group')
         plot.axis('equal')        
         plot.show()
+    def export_csv():
+        file1=open(f"{active_user}_split.csv","w+")
+        csvwriter=csv.writer(file1)
+        l5=["Group Name","Amount"]
+        csvwriter.writerow(l5)
+        csvwriter.writerows(l4)
+        file1.close()
+    def export_pdf():
+        from reportlab.pdfgen.canvas import Canvas
+        margin = 15 * mm  # Adjust margins as needed
+        title = "ShareSquare - A Friendly way to split bills : Report"
+        filename = f"{active_user}_report.pdf"
+        l5=["Group Name","Amount"]
+        l7=l4[0]
+        c = canvas.Canvas(filename)
+        c.setFont("Helvetica", 16)
+        c.drawString(margin, 270 * mm, title)  # Adjust text position
+        # Draw lines for header
+        c.setStrokeColor("#000")
+        c.line(margin, 265 * mm, 205 * mm, 265 * mm)
+        c.line(margin, 240 * mm, 205 * mm, 240 * mm)
+        # Add column headers
+        c.drawString(margin, 235 * mm, "Group Name")
+        c.drawString(120 * mm, 235 * mm, "Bill Amount")
+        for i in range(len(l5)):
+            y_pos = 220 * mm - i * 10 * mm  # Adjust spacing between items
+            c.drawString(margin, y_pos, l4[i][0])
+            c.drawString(120 * mm, y_pos, l4[i][1])
+        """
+        for j in range(len(l4)):
+            c.drawString(margin, y_pos, l4[j][0])
+            c.drawString(120 * mm, y_pos, l4[j][1])    
+        """
+        c.showPage()
+        c.save()
     groups = l1
     expenditures = l2
     frame9=tkinter.Frame(window2,bg=bg1)
@@ -394,7 +438,10 @@ def your_debts():
     label_profile8.grid(row=0,column=1,columnspan=6,pady=(10,0),padx=(30,90))
     submit_button=tkinter.Button(frame9,text="Expense by Group",bg=c2,fg="White",command=plot_pie_chart)
     submit_button.grid(row=3,column=1,columnspan=2,pady=20)
-    
+    submit_button1=tkinter.Button(frame9,text="Export to CSV",bg=c2,fg="White",command=export_csv)
+    submit_button1.grid(row=3,column=3,columnspan=2,pady=20) 
+    submit_button2=tkinter.Button(frame9,text="Export to PDF",bg=c2,fg="White",command=export_pdf)
+    submit_button2.grid(row=3,column=5,columnspan=2,pady=20)   
     
 #user profile page 
 def profile():
