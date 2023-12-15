@@ -4,6 +4,8 @@
 # All the modules used:
 >+ tkinter
 >> GUI
+>+ itertools
+>> To create complex looping constructs
 >+ matplotlib 
 >> Plot pie charts
 >+ reportlab
