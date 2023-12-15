@@ -12,8 +12,8 @@
 >> Export data to PDF
 >+ csv 
 >> Export data to CSV File
->+ PostgreSQL
->> Database for the Application
+>+ psycopg2
+>> PostgreSQL database connection for the application
 
 # SQL commands to create the Database:
 ### 1. loginpage
