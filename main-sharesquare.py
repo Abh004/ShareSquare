@@ -38,7 +38,7 @@ def loginpage():
             active_user = email_Entry.get()
             mainwindow()        
         else:
-            messagebox.showinfo(title="Login",message="Incorrect Email or password")
+            messagebox.showinfo(title="Login",message="Incorrect Username or Password!")
     else:
         messagebox.showinfo(title="Invalid Input",message="Please fill in all the fields!")
     conn.close()
