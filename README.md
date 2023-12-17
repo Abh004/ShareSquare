@@ -4,6 +4,9 @@
 >+ Python 3.12.0 
 >+ PostgreSQL & pgAdmin4 to manage the database
 >+ pip install all the modules mentioned below
+-----------------------
+![Alt text](image.png)
+-----------------------
 
 # All the modules used:
 >+ tkinter
