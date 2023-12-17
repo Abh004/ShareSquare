@@ -5,7 +5,7 @@
 >+ PostgreSQL & pgAdmin4 to manage the database
 >+ pip install all the modules mentioned below
 -----------------------
-![Alt text](image.png)
+![Alt text](sharesquare-home-1.png)
 -----------------------
 
 # All the modules used:
