@@ -302,7 +302,7 @@ def next():
     #Create a dropdown Menu
     drop= OptionMenu(frame5, menu, *options)
     drop.grid(row=0,column=0,columnspan=2, padx=(0,0), pady=(80,0))    
-    button1 = tkinter.Button(frame5,text = "Enter",bg=c2,fg="White", command=input)
+    button1 = tkinter.Button(frame5,text = "Split your Bill",bg=c2,fg="White", command=input)
     button1.grid(row=1,column=0,padx=(20,0), pady=(20,0)) 
     label5=tkinter.Label(frame5,text="Choose Group",bg=bg1,fg="White",font=("Arial",16))
     label5.grid(row=0, column=0, columnspan=2, pady=(0,0))
@@ -316,8 +316,7 @@ def splitbill():
     window1.title("ShareSquare - Split Bill")
     window1['background']=bg1
     window1.geometry('%dx%d+%d+%d' % (width, height, x, y))
-    window1.resizable(0,0)
-    
+    window1.resizable(0,0)    
     frame4=tkinter.Frame(window1,bg=bg1)
     frame4.pack()
     label2=tkinter.Label(frame4,text="Create Group",bg=bg1,fg="White",font=("Arial",16))    
@@ -330,9 +329,9 @@ def splitbill():
     Entry_groupname.grid(row=1,column=1)
     label1.grid(row=2,column=0)
     Entry_members.grid(row=2,column=1)
-    submit_button=tkinter.Button(frame4,text="Submit",bg=c2,fg="White",command=submit)
+    submit_button=tkinter.Button(frame4,text="Create Group",bg=c2,fg="White",command=submit)
     submit_button.grid(row=3,column=0,columnspan=2,pady=20)
-    next_button=tkinter.Button(frame4,text="Next",bg=c2,fg="White",command=next)
+    next_button=tkinter.Button(frame4,text="Already created a group? Click here",bg=c2,fg="White",command=next)
     next_button.grid(row=5,column=0,columnspan=2,pady=20)
 
 #your debts page
@@ -413,16 +412,11 @@ def your_debts():
         c.line(margin, 240 * mm, 205 * mm, 240 * mm)
         # Add column headers
         c.drawString(margin, 235 * mm, "Group Name")
-        c.drawString(120 * mm, 235 * mm, "Bill Amount")
-        for i in range(len(l5)):
-            y_pos = 220 * mm - i * 10 * mm  # Adjust spacing between items
+        c.drawString(120 * mm, 235 * mm, "Bill Amount")        
+        for i in range(len(l4)):
+            y_pos = 220 * mm - i * 10 * mm  # Adjust spacing between items            
             c.drawString(margin, y_pos, l4[i][0])
             c.drawString(120 * mm, y_pos, l4[i][1])
-        """
-        for j in range(len(l4)):
-            c.drawString(margin, y_pos, l4[j][0])
-            c.drawString(120 * mm, y_pos, l4[j][1])    
-        """
         c.showPage()
         c.save()
     groups = l1
