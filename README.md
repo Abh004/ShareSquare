@@ -1,5 +1,5 @@
 # ShareSquare 
-####Active work is being carried out to deploy it to the web
+#### Active work is being carried out to deploy it to the web
 -------------------------------------------------------------------------
 # Dependencies:
 >+ Python 3.12.0 
