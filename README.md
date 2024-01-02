@@ -1,5 +1,5 @@
-# ShareSquare
------------------------
+# ShareSquare (Active work is being carried out to deploy it to the web)
+-------------------------------------------------------------------------
 # Dependencies:
 >+ Python 3.12.0 
 >+ PostgreSQL & pgAdmin4 to manage the database
