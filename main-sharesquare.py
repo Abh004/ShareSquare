@@ -15,7 +15,7 @@ from reportlab.lib.pagesizes import A4
 #DB Conn for login page
 def loginpage():
     global active_user
-    conn = psycopg2.connect(
+    conn = psycopg2.connect(n
         host="localhost",
         database="sharesquare1",
         user="postgres",
